@@ -1,17 +1,73 @@
+use std::thread;
 use rand::Rng;
 
 fn main() {
+    const SIZE: usize = 75;
+
     let mut rng = rand::thread_rng();
-    let mut main_layer = [[0u8; 10]; 10];
-    let mut possible_layer = [[0u8; 10]; 10];
+    let mut main_layer = [[0u8; SIZE]; SIZE];
+    let mut possible_layer = [[0u8; SIZE]; SIZE];
 
-    main_layer[0][rng.gen_range(0..10)] = 1;
+    let avg_size = (SIZE + SIZE) / 2;
 
-    //prints out the main layer in a more readable format
-    for i in 0..10 {
-        for j in 0..10 {
-            print!("{}", main_layer[i][j]);
+    for _i in 0..avg_size*20 {
+        let init_pos_x = rng.gen_range(1..SIZE-1);
+        let init_pos_y = rng.gen_range(1..SIZE-1);
+        main_layer[init_pos_x][init_pos_y] = 1;
+    }
+
+    while 1==1 {
+        for x in 1..SIZE-1 {
+            for y in 1..SIZE-1 {
+                let mut neighbours = 0;
+                // check neighbours
+                neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
+
+                if main_layer[x][y] == 1 {
+                    // Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
+                    if neighbours < 2 {
+                        possible_layer[x][y] = 2;
+                    }
+                    // Any live cell with two or three live neighbours lives on to the next generation.
+                    if neighbours == 2 || neighbours == 3 {
+                        possible_layer[x][y] = 1;
+                    }
+                    // Any live cell with more than three live neighbours dies, as if by overpopulation.
+                    if neighbours > 3 {
+                        possible_layer[x][y] = 2;
+                    }
+                }
+                if main_layer[x][y] == 0 {
+                    // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+                    if neighbours == 3 {
+                        possible_layer[x][y] = 1;
+                    }
+                }
+                drop(neighbours);
+            }
         }
-        println!();
+        
+        for x in 1..SIZE-1 {
+            for y in 1..SIZE-1 {
+                if possible_layer[x][y] == 1 {
+                    main_layer[x][y] = 1;
+                    possible_layer[x][y] = 0;
+                }
+                if possible_layer[x][y] == 2 {
+                    main_layer[x][y] = 0;
+                    possible_layer[x][y] = 0;
+                }
+            }
+        }
+        
+        // clear previous frame
+        print!("{}[2J", 27 as char);
+        for x in 1..SIZE-1 {
+            for y in 1..SIZE-1 {
+                print!("{}", main_layer[x][y].to_string().replace("0", " ").replace("1", "█"));
+            }
+            println!("");
+        }
+        thread::sleep(std::time::Duration::from_millis(150));
     }
 }
