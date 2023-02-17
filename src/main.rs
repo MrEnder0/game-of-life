@@ -5,9 +5,9 @@ use ini::Ini;
 fn main() {
     let settings = Ini::load_from_file("settings.ini").unwrap();
     let size = settings.get_from(Some("settings"), "size").unwrap().parse::<usize>().unwrap();
-    //ini to string
     let filled = settings.get_from(Some("settings"), "filled").unwrap();
     let empty = settings.get_from(Some("settings"), "empty").unwrap();
+    let delay = settings.get_from(Some("settings"), "delay").unwrap().parse::<u64>().unwrap();
 
     let mut rng = rand::thread_rng();
     let mut main_layer = vec![vec![0; size]; size];
@@ -71,6 +71,6 @@ fn main() {
             }
             println!("");
         }
-        thread::sleep(std::time::Duration::from_millis(150));
+        thread::sleep(std::time::Duration::from_millis(delay));
     }
 }
