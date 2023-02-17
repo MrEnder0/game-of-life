@@ -8,9 +8,7 @@ fn main() {
     let mut main_layer = [[0u8; SIZE]; SIZE];
     let mut possible_layer = [[0u8; SIZE]; SIZE];
 
-    let avg_size = (SIZE + SIZE) / 2;
-
-    for _i in 0..avg_size*20 {
+    for _i in 0..SIZE*20 {
         let init_pos_x = rng.gen_range(1..SIZE-1);
         let init_pos_y = rng.gen_range(1..SIZE-1);
         main_layer[init_pos_x][init_pos_y] = 1;
@@ -20,6 +18,7 @@ fn main() {
         for x in 1..SIZE-1 {
             for y in 1..SIZE-1 {
                 let mut neighbours = 0;
+
                 neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
 
                 if main_layer[x][y] == 1 {
