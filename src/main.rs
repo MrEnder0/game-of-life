@@ -17,31 +17,31 @@ fn main() {
     while 1==1 {
         for x in 1..SIZE-1 {
             for y in 1..SIZE-1 {
-                let mut neighbours = 0;
+                let mut _neighbours = 0;
 
-                neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
+                _neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
 
                 if main_layer[x][y] == 1 {
                     // Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
-                    if neighbours < 2 {
+                    if _neighbours < 2 {
                         possible_layer[x][y] = 2;
                     }
                     // Any live cell with two or three live neighbours lives on to the next generation.
-                    if neighbours == 2 || neighbours == 3 {
+                    if _neighbours == 2 || _neighbours == 3 {
                         possible_layer[x][y] = 1;
                     }
                     // Any live cell with more than three live neighbours dies, as if by overpopulation.
-                    if neighbours > 3 {
+                    if _neighbours > 3 {
                         possible_layer[x][y] = 2;
                     }
                 }
                 if main_layer[x][y] == 0 {
                     // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-                    if neighbours == 3 {
+                    if _neighbours == 3 {
                         possible_layer[x][y] = 1;
                     }
                 }
-                drop(neighbours);
+                drop(_neighbours);
             }
         }
         
