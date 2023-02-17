@@ -20,7 +20,6 @@ fn main() {
         for x in 1..SIZE-1 {
             for y in 1..SIZE-1 {
                 let mut neighbours = 0;
-                // check neighbours
                 neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
 
                 if main_layer[x][y] == 1 {
