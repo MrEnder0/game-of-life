@@ -14,8 +14,6 @@ fn keybinds() {
     if let Ok(character) = stdout.read_char() {
         match character {
             'q' => {
-                println!("Quitting...");
-                std::thread::sleep(std::time::Duration::from_millis(100));
                 unsafe { RUN = false; }
             },
             _ => do_nothing()
@@ -101,5 +99,6 @@ fn main() {
         thread::sleep(std::time::Duration::from_millis(frame_delay));
     }
 
+    println!("Quitting...");
     keybind_thread.join().unwrap();
 }
