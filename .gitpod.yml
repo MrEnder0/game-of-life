@@ -1,0 +1,14 @@
+image: gitpod/workspace-full
+
+tasks:
+  - name: Startup
+    init: |
+      sudo apt-get -q update
+      sudo apt-get install -y libpython3.6 rust-lldb
+      sudo rm -rf /var/lib/apt/lists/*
+      cd src
+vscode:
+  extensions:
+    - rust-lang.rust-analyzer
+    - yzhang.markdown-all-in-one
+    - DavidAnson.vscode-markdownlint
