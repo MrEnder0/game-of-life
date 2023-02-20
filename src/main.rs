@@ -1,6 +1,6 @@
 use console::Term;
 use std::thread;
-use rand::Rng;
+use rand::{Rng, rngs::StdRng, SeedableRng};
 use ini::Ini;
 
 static mut RUN: bool = true;
@@ -28,8 +28,9 @@ fn main() {
     let spawn_multiplier = settings.get_from(Some("settings"), "spawn_multiplier").unwrap().parse::<usize>().unwrap();
     let filled_tile = settings.get_from(Some("settings"), "filled_tile").unwrap();
     let empty_tile = settings.get_from(Some("settings"), "empty_tile").unwrap();
+    let starting_seed = settings.get_from(Some("settings"), "starting_seed").unwrap().parse::<u64>().unwrap();
 
-    let mut rng = rand::thread_rng();
+    let mut rng = StdRng::seed_from_u64(starting_seed);
     let mut main_layer = vec![vec![0; frame_size]; frame_size];
     let mut possible_layer = vec![vec![0; frame_size]; frame_size];
 
