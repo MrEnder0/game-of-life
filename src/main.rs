@@ -26,8 +26,8 @@ fn main() {
     let frame_size = settings.get_from(Some("settings"), "frame_size").unwrap().parse::<usize>().unwrap();
     let frame_delay = settings.get_from(Some("settings"), "frame_delay").unwrap().parse::<u64>().unwrap();
     let spawn_multiplier = settings.get_from(Some("settings"), "spawn_multiplier").unwrap().parse::<usize>().unwrap();
-    let filled = settings.get_from(Some("settings"), "filled").unwrap();
-    let empty = settings.get_from(Some("settings"), "empty").unwrap();
+    let filled_tile = settings.get_from(Some("settings"), "filled_tile").unwrap();
+    let empty_tile = settings.get_from(Some("settings"), "empty_tile").unwrap();
 
     let mut rng = rand::thread_rng();
     let mut main_layer = vec![vec![0; frame_size]; frame_size];
@@ -91,7 +91,7 @@ fn main() {
         print!("{}[2J", 27 as char);
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
-                print!("{}", main_layer[x][y].to_string().replace("0", empty).replace("1", filled));
+                print!("{}", main_layer[x][y].to_string().replace("0", empty_tile).replace("1", filled_tile));
             }
             println!("");
         }
