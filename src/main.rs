@@ -1,6 +1,27 @@
+use console::Term;
 use std::thread;
 use rand::Rng;
 use ini::Ini;
+
+static mut RUN: bool = true;
+
+fn do_nothing() {
+    // do nothing... shocker
+}
+
+fn keybinds() {
+    let stdout = Term::buffered_stdout();
+    if let Ok(character) = stdout.read_char() {
+        match character {
+            'q' => {
+                println!("Quitting...");
+                std::thread::sleep(std::time::Duration::from_millis(100));
+                unsafe { RUN = false; }
+            },
+            _ => do_nothing()
+        }
+    }
+}
 
 fn main() {
     let settings = Ini::load_from_file("settings.ini").unwrap();
@@ -20,7 +41,11 @@ fn main() {
         main_layer[init_pos_x][init_pos_y] = 1;
     }
 
-    while 1==1 {
+    let keybind_thread = thread::spawn(move || {
+        keybinds();
+    });
+
+    while unsafe{ RUN } == true {
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
                 let mut _neighbours = 0;
@@ -72,6 +97,9 @@ fn main() {
             }
             println!("");
         }
+
         thread::sleep(std::time::Duration::from_millis(frame_delay));
     }
+
+    keybind_thread.join().unwrap();
 }
