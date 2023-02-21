@@ -35,6 +35,7 @@ fn main() {
         create_settings.write_to_file("settings.ini").unwrap();
     }
 
+    // loads settings
     let settings = Ini::load_from_file("settings.ini").unwrap();
     let frame_size = settings.get_from(Some("settings"), "frame_size").unwrap().parse::<usize>().unwrap();
     let frame_delay = settings.get_from(Some("settings"), "frame_delay").unwrap().parse::<u64>().unwrap();
