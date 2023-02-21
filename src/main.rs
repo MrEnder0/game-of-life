@@ -46,11 +46,13 @@ fn main() {
     let starting_seed = settings.get_from(Some("settings"), "starting_seed").unwrap().parse::<u64>().unwrap();
     let use_seed = settings.get_from(Some("settings"), "use_seed").unwrap().parse::<bool>().unwrap();
 
+    // use seed if configured to
     let mut rng = if use_seed == true {
         StdRng::seed_from_u64(starting_seed)
     } else {
         StdRng::from_entropy()
     };
+
     let mut main_layer = vec![vec![0; frame_size]; frame_size];
     let mut possible_layer = vec![vec![0; frame_size]; frame_size];
 
