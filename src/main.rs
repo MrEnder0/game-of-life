@@ -31,7 +31,8 @@ fn main() {
             .set("spawn_multiplier", "25")
             .set("filled_tile", "🟩")
             .set("empty_tile", "🟥")
-            .set("starting_seed", "0");
+            .set("starting_seed", "0")
+            .set("use_seed", "false");
         create_settings.write_to_file("settings.ini").unwrap();
     }
 
@@ -43,8 +44,13 @@ fn main() {
     let filled_tile = settings.get_from(Some("settings"), "filled_tile").unwrap();
     let empty_tile = settings.get_from(Some("settings"), "empty_tile").unwrap();
     let starting_seed = settings.get_from(Some("settings"), "starting_seed").unwrap().parse::<u64>().unwrap();
+    let use_seed = settings.get_from(Some("settings"), "use_seed").unwrap().parse::<bool>().unwrap();
 
-    let mut rng = StdRng::seed_from_u64(starting_seed);
+    let mut rng = if use_seed == true {
+        StdRng::seed_from_u64(starting_seed)
+    } else {
+        StdRng::from_entropy()
+    };
     let mut main_layer = vec![vec![0; frame_size]; frame_size];
     let mut possible_layer = vec![vec![0; frame_size]; frame_size];
 

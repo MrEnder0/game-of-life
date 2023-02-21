@@ -4,4 +4,4 @@ Note none of these plans are guaranteed and also their may be other changes that
 # High priority
 [ ] Config
     [ ] RuleSet config
-    [ ] UseSeed config
+    [x] UseSeed config
