@@ -22,6 +22,19 @@ fn keybinds() {
 }
 
 fn main() {
+    // generate settings file if it doesn't exist
+    if !std::path::Path::new("settings.ini").exists() {
+        let mut create_settings = Ini::new();
+        create_settings.with_section(Some("settings"))
+            .set("frame_size", "60")
+            .set("frame_delay", "150")
+            .set("spawn_multiplier", "25")
+            .set("filled_tile", "🟩")
+            .set("empty_tile", "🟥")
+            .set("starting_seed", "0");
+        create_settings.write_to_file("settings.ini").unwrap();
+    }
+
     let settings = Ini::load_from_file("settings.ini").unwrap();
     let frame_size = settings.get_from(Some("settings"), "frame_size").unwrap().parse::<usize>().unwrap();
     let frame_delay = settings.get_from(Some("settings"), "frame_delay").unwrap().parse::<u64>().unwrap();
