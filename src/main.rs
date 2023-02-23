@@ -8,6 +8,8 @@ static mut RUN: bool = true;
 
 fn main() {
     let (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed) = config_manager::load_config();
+    let filled_tile = &filled_tile.to_string()[..];
+    let empty_tile = &empty_tile.to_string()[..];
 
     // use seed if configured to
     let mut rng = if use_seed == true {
@@ -76,10 +78,13 @@ fn main() {
         
         // clear previous frame
         print!("{}[2J", 27 as char);
+
+        //better version just needs more testing
+        //print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
         
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
-                print!("{}", main_layer[x][y].to_string().replace("0", &empty_tile.to_string()[..]).replace("1", &filled_tile.to_string()[..]));
+                print!("{}", main_layer[x][y].to_string().replace("0", empty_tile).replace("1", filled_tile));
             }
             println!("");
         }
