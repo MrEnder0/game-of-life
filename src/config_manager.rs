@@ -1,3 +1,4 @@
+use rand::Rng;
 use ini::Ini;
 
 pub(crate) fn load_config() -> (usize, u64, usize, char, char, u64, bool) {
@@ -10,7 +11,8 @@ pub(crate) fn load_config() -> (usize, u64, usize, char, char, u64, bool) {
             .set("spawn_multiplier", "25")
             .set("filled_tile", "🟩")
             .set("empty_tile", "🟥")
-            .set("starting_seed", "0")
+            //random starting seed
+            .set("starting_seed", rand::thread_rng().gen_range(-2147483647..2147483647).to_string().as_str())
             .set("use_seed", "false");
         create_settings.write_to_file("settings.ini").unwrap();
     }
