@@ -1,26 +1,10 @@
 mod config_manager;
+mod exit_manager;
 
 use rand::{Rng, rngs::StdRng, SeedableRng};
-use console::Term;
 use std::thread;
 
 static mut RUN: bool = true;
-
-fn do_nothing() {
-    // do nothing... shocker
-}
-
-fn keybinds() {
-    let stdout = Term::buffered_stdout();
-    if let Ok(character) = stdout.read_char() {
-        match character {
-            'q' => {
-                unsafe { RUN = false; }
-            },
-            _ => do_nothing()
-        }
-    }
-}
 
 fn main() {
     let (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed) = config_manager::load_config();
@@ -42,7 +26,7 @@ fn main() {
     }
 
     let keybind_thread = thread::spawn(move || {
-        keybinds();
+        exit_manager::exit_keybind();
     });
 
     while unsafe{ RUN } == true {
@@ -91,6 +75,7 @@ fn main() {
         
         // clear previous frame
         print!("{}[2J", 27 as char);
+        
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
                 print!("{}", main_layer[x][y].to_string().replace("0", &empty_tile.to_string()[..]).replace("1", &filled_tile.to_string()[..]));
