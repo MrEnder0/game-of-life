@@ -18,6 +18,7 @@ fn main() {
 
     let mut main_layer = vec![vec![0; frame_size]; frame_size];
     let mut possible_layer = vec![vec![0; frame_size]; frame_size];
+    let mut frame_count = 0;
 
     for _i in 0..frame_size*spawn_multiplier {
         let init_pos_x = rng.gen_range(1..frame_size-1);
@@ -84,8 +85,9 @@ fn main() {
         }
 
         thread::sleep(std::time::Duration::from_millis(frame_delay));
+        frame_count += 1;
     }
 
-    println!("Quitting...");
+    println!("Quit simulation after {} frames while targeting at {} fps", frame_count, (1000/frame_delay));
     keybind_thread.join().unwrap();
 }
