@@ -90,6 +90,10 @@ fn main() {
         frame_count += 1;
     }
 
-    println!("Quit simulation after {} frames while targeting at {} fps", frame_count, (1000/frame_delay));
+    if frame_delay <= 0 {
+        println!("Quit simulation after {} frames while targeting ∞ fps", frame_count);
+    } else {
+        println!("Quit simulation after {} frames while targeting {} fps", frame_count, (1000/frame_delay));
+    }
     keybind_thread.join().unwrap();
 }
