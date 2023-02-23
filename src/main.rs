@@ -77,10 +77,7 @@ fn main() {
         }
         
         // clear previous frame
-        print!("{}[2J", 27 as char);
-
-        //better version just needs more testing
-        //print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
+        print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
         
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
