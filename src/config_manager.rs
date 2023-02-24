@@ -1,3 +1,4 @@
+use std::thread;
 use rand::Rng;
 use ini::Ini;
 
@@ -25,6 +26,12 @@ pub(crate) fn load_config() -> (usize, u64, usize, char, char, u64, bool) {
     let empty_tile = settings.get_from(Some("settings"), "empty_tile").unwrap().parse::<char>().unwrap();
     let starting_seed = settings.get_from(Some("settings"), "starting_seed").unwrap().parse::<u64>().unwrap();
     let use_seed = settings.get_from(Some("settings"), "use_seed").unwrap().parse::<bool>().unwrap();
+
+    if empty_tile == filled_tile {
+        println!("Filled tile and empty tile cannot be the same; please change them in settings.ini; Exiting in 5 seconds...");
+        thread::sleep(std::time::Duration::from_millis(5000));
+        std::process::exit(0);
+    }
 
     return (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed);
 }
