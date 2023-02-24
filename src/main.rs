@@ -39,7 +39,7 @@ fn main() {
         exit_manager::exit_keybind();
     });
 
-    while unsafe{ RUN } == true {
+    while frame_count < 1000 {
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
                 let mut _neighbours = 0;
@@ -106,5 +106,8 @@ fn main() {
     } else {
         println!("Quit simulation after {} frames while targeting {} fps", frame_count, (1000/frame_delay));
     }
+
+    thread::sleep(std::time::Duration::from_millis(5000));
     keybind_thread.join().unwrap();
+    std::process::exit(0);
 }
