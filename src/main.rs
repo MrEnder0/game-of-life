@@ -16,7 +16,7 @@ fn main() {
     let filled_tile = &filled_tile.to_string()[..];
     let empty_tile = &empty_tile.to_string()[..];
 
-    let mut stdout = std::io::stdout();
+    let stdout = std::io::stdout();
 
     // use seed if configured to
     let mut rng = if use_seed == true {
