@@ -2,6 +2,7 @@ mod config_manager;
 mod exit_manager;
 
 use rand::{Rng, rngs::StdRng, SeedableRng};
+use std::io::Write;
 use std::thread;
 
 static mut RUN: bool = true;
@@ -14,6 +15,8 @@ fn main() {
     let (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed) = config_manager::load_config();
     let filled_tile = &filled_tile.to_string()[..];
     let empty_tile = &empty_tile.to_string()[..];
+
+    let mut stdout = std::io::stdout();
 
     // use seed if configured to
     let mut rng = if use_seed == true {
@@ -86,9 +89,11 @@ fn main() {
         print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
         
         for x in 1..frame_size-1 {
+            let mut lock = stdout.lock();
             for y in 1..frame_size-1 {
-                print!("{}", main_layer[x][y].to_string().replace("0", empty_tile).replace("1", filled_tile));
+                write!(lock, "{}", main_layer[x][y].to_string().replace("0", empty_tile).replace("1", filled_tile));
             }
+            drop(lock);
             println!("");
         }
 
