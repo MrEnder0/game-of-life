@@ -6,6 +6,10 @@ use std::thread;
 
 static mut RUN: bool = true;
 
+fn do_nothing() {
+    // do nothing... shocker
+}
+
 fn main() {
     let (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed) = config_manager::load_config();
     let filled_tile = &filled_tile.to_string()[..];
@@ -65,13 +69,16 @@ fn main() {
         
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
-                if possible_layer[x][y] == 1 {
-                    main_layer[x][y] = 1;
-                    possible_layer[x][y] = 0;
-                }
-                if possible_layer[x][y] == 2 {
-                    main_layer[x][y] = 0;
-                    possible_layer[x][y] = 0;
+                match possible_layer[x][y] {
+                    1 => {
+                        main_layer[x][y] = 1;
+                        possible_layer[x][y] = 0;
+                    },
+                    2 => {
+                        main_layer[x][y] = 0;
+                        possible_layer[x][y] = 0;
+                    },
+                    _ => do_nothing()
                 }
             }
         }
