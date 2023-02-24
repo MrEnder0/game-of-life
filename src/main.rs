@@ -43,25 +43,24 @@ fn main() {
 
                 _neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
 
-                if main_layer[x][y] == 1 {
-                    // Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
-                    if _neighbours < 2 {
-                        possible_layer[x][y] = 2;
-                    }
-                    // Any live cell with two or three live neighbours lives on to the next generation.
-                    if _neighbours == 2 || _neighbours == 3 {
-                        possible_layer[x][y] = 1;
-                    }
-                    // Any live cell with more than three live neighbours dies, as if by overpopulation.
-                    if _neighbours > 3 {
-                        possible_layer[x][y] = 2;
-                    }
-                }
-                if main_layer[x][y] == 0 {
-                    // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-                    if _neighbours == 3 {
-                        possible_layer[x][y] = 1;
-                    }
+                match main_layer[x][y] {
+                    1 => {
+                        if _neighbours < 2 {
+                            possible_layer[x][y] = 2;
+                        }
+                        if _neighbours == 2 || _neighbours == 3 {
+                            possible_layer[x][y] = 1;
+                        }
+                        if _neighbours > 3 {
+                            possible_layer[x][y] = 2;
+                        }
+                    },
+                    0 => {
+                        if _neighbours == 3 {
+                            possible_layer[x][y] = 1;
+                        }
+                    },
+                    _ => do_nothing()
                 }
                 drop(_neighbours);
             }
