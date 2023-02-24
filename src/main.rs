@@ -39,7 +39,9 @@ fn main() {
         exit_manager::exit_keybind();
     });
 
-    while frame_count < 1000 {
+    print!("{}[2J", 27 as char);
+
+    while unsafe { RUN } {
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
                 let mut _neighbours = 0;
@@ -86,16 +88,16 @@ fn main() {
         }
         
         // clear previous frame
-        print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
+        print!("{esc}[1;1H", esc = 27 as char);
         
+        let mut lock = stdout.lock();
         for x in 1..frame_size-1 {
-            let mut lock = stdout.lock();
             for y in 1..frame_size-1 {
                 write!(lock, "{}", main_layer[x][y].to_string().replace("0", empty_tile).replace("1", filled_tile));
             }
-            drop(lock);
             println!("");
         }
+        drop(lock);
 
         thread::sleep(std::time::Duration::from_millis(frame_delay));
         frame_count += 1;
@@ -107,7 +109,7 @@ fn main() {
         println!("Quit simulation after {} frames while targeting {} fps", frame_count, (1000/frame_delay));
     }
 
-    thread::sleep(std::time::Duration::from_millis(5000));
+    thread::sleep(std::time::Duration::from_millis(1000));
     keybind_thread.join().unwrap();
     std::process::exit(0);
 }
