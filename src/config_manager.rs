@@ -12,7 +12,7 @@ pub(crate) fn load_config() -> (usize, u64, usize, char, char, u64, bool) {
             .set("filled_tile", "🟩")
             .set("empty_tile", "🟥")
             //random starting seed
-            .set("starting_seed", rand::thread_rng().gen_range(-2147483647..2147483647).to_string().as_str())
+            .set("starting_seed", rand::thread_rng().gen_range(-2_147_483_647..2_147_483_647).to_string().as_str())
             .set("use_seed", "false");
         create_settings.write_to_file("settings.ini").unwrap();
     }
