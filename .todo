@@ -5,5 +5,5 @@ Note none of these plans are guaranteed and also their may be other changes that
 [ ] Config
     [ ] RuleSet config
     [x] UseSeed config
-    [ ] RenderFrameSkip config
+    [x] RenderFrameSkip config
     
