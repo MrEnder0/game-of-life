@@ -12,7 +12,7 @@ fn do_nothing() {
 }
 
 fn main() {
-    let (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed) = config_manager::load_config();
+    let (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed, interleaved_frames) = config_manager::load_config();
     let filled_tile = &filled_tile.to_string()[..];
     let empty_tile = &empty_tile.to_string()[..];
 
@@ -87,26 +87,28 @@ fn main() {
             }
         }
         
-        // clear previous frame
-        print!("{esc}[1;1H", esc = 27 as char);
-        
-        let mut lock = stdout.lock();
-        for x in 1..frame_size-1 {
-            for y in 1..frame_size-1 {
-                write!(lock, "{}", main_layer[x][y].to_string().replace("0", empty_tile).replace("1", filled_tile));
+        if interleaved_frames == false || frame_count % 2 == 0 {
+            // clear previous frame
+            print!("{esc}[1;1H", esc = 27 as char);
+            
+            let mut lock = stdout.lock();
+            for x in 1..frame_size-1 {
+                for y in 1..frame_size-1 {
+                    write!(lock, "{}", main_layer[x][y].to_string().replace("0", empty_tile).replace("1", filled_tile));
+                }
+                println!("");
             }
-            println!("");
-        }
-        drop(lock);
+            drop(lock);
 
-        thread::sleep(std::time::Duration::from_millis(frame_delay));
+            thread::sleep(std::time::Duration::from_millis(frame_delay));
+        }
         frame_count += 1;
     }
 
     if frame_delay <= 0 {
-        println!("Quit simulation after {} frames while targeting ∞ fps", frame_count);
+        println!("Quit simulation after {frame_count} frames while targeting ∞ fps with interleaved frames {interleaved_frames_status}", frame_count = frame_count, interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
     } else {
-        println!("Quit simulation after {} frames while targeting {} fps", frame_count, (1000/frame_delay));
+        println!("Quit simulation after {frame_count} frames while targeting {fps} fps with interleaved frames {interleaved_frames_status}", frame_count = frame_count, fps = (1000/frame_delay), interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
     }
 
     thread::sleep(std::time::Duration::from_millis(1000));
