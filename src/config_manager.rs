@@ -1,4 +1,3 @@
-use std::thread;
 use rand::Rng;
 use ini::Ini;
 
