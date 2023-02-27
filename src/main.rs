@@ -104,9 +104,9 @@ fn main() {
     }
 
     if frame_delay <= 0 {
-        println!("Quit simulation after {frame_count} frames while targeting ∞ fps with interleaved frames {interleaved_frames_status}", frame_count = frame_count, interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
+        println!("Quit simulation after {frame_count} frames\nTargeted fps was ∞\nInterleaved frames were {interleaved_frames_status}", frame_count = frame_count, interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
     } else {
-        println!("Quit simulation after {frame_count} frames while targeting {fps} fps with interleaved frames {interleaved_frames_status}", frame_count = frame_count, fps = (1000/frame_delay), interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
+        println!("Quit simulation after {frame_count} frames\nTargeted fps was {fps}\nInterleaved frames were {interleaved_frames_status}", frame_count = frame_count, fps = (1000/frame_delay), interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
     }
 
     thread::sleep(std::time::Duration::from_millis(1000));
