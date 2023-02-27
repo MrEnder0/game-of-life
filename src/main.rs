@@ -44,9 +44,7 @@ fn main() {
     while unsafe { RUN } {
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
-                let mut _neighbours = 0;
-
-                _neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
+                let mut _neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
 
                 match main_layer[x][y] {
                     1 => {
