@@ -20,7 +20,7 @@ fn main() {
 
     // use seed if configured to
     let mut rng = if use_seed == true {
-        StdRng::seed_from_u64(starting_seed)
+        StdRng::seed_from_u64(starting_seed.try_into().unwrap())
     } else {
         StdRng::from_entropy()
     };

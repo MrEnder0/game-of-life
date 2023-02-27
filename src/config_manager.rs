@@ -1,7 +1,7 @@
 use rand::Rng;
 use ini::Ini;
 
-pub(crate) fn load_config() -> (usize, u64, usize, char, char, u64, bool, bool) {
+pub(crate) fn load_config() -> (usize, u64, usize, char, char, i32, bool, bool) {
     // generate settings file if it doesn't exist
     if !std::path::Path::new("settings.ini").exists() {
         let mut create_settings = Ini::new();
@@ -11,7 +11,7 @@ pub(crate) fn load_config() -> (usize, u64, usize, char, char, u64, bool, bool) 
             .set("spawn_multiplier", "25")
             .set("filled_tile", "🟩")
             .set("empty_tile", "🟥")
-            .set("starting_seed", rand::thread_rng().gen_range(-2_147_483_647..2_147_483_647).to_string().as_str())
+            .set("starting_seed", rand::thread_rng().gen_range(-2_147_483_648..2_147_483_647).to_string().as_str())
             .set("use_seed", "false")
             .set("interleaved_frames", "false");
         create_settings.write_to_file("settings.ini").unwrap();
@@ -24,7 +24,7 @@ pub(crate) fn load_config() -> (usize, u64, usize, char, char, u64, bool, bool) 
     let spawn_multiplier = settings.get_from(Some("settings"), "spawn_multiplier").unwrap().parse::<usize>().unwrap();
     let filled_tile = settings.get_from(Some("settings"), "filled_tile").unwrap().parse::<char>().unwrap();
     let empty_tile = settings.get_from(Some("settings"), "empty_tile").unwrap().parse::<char>().unwrap();
-    let starting_seed = settings.get_from(Some("settings"), "starting_seed").unwrap().parse::<u64>().unwrap();
+    let starting_seed = settings.get_from(Some("settings"), "starting_seed").unwrap().parse::<i32>().unwrap();
     let use_seed = settings.get_from(Some("settings"), "use_seed").unwrap().parse::<bool>().unwrap();
     let interleaved_frames = settings.get_from(Some("settings"), "interleaved_frames").unwrap().parse::<bool>().unwrap();
 
