@@ -12,11 +12,11 @@ fn do_nothing() {
 }
 
 fn main() {
-    let (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed, interleaved_frames) = config_manager::load_config();
+    let stdout = std::io::stdout();
+
+    let (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed, interleaved_frames, live_rule, grow_rule) = config_manager::load_config();
     let filled_tile = &filled_tile.to_string()[..];
     let empty_tile = &empty_tile.to_string()[..];
-
-    let stdout = std::io::stdout();
 
     // use seed if configured to
     let mut rng = if use_seed == true {
@@ -48,18 +48,14 @@ fn main() {
 
                 match main_layer[x][y] {
                     1 => {
-                        if _neighbours < 2 {
-                            possible_layer[x][y] = 2;
-                        }
-                        if _neighbours == 2 || _neighbours == 3 {
+                        if live_rule.contains(_neighbours as u8 as char) {
                             possible_layer[x][y] = 1;
-                        }
-                        if _neighbours > 3 {
+                        } else {
                             possible_layer[x][y] = 2;
                         }
                     },
                     0 => {
-                        if _neighbours == 3 {
+                        if grow_rule.contains(_neighbours as u8 as char) {
                             possible_layer[x][y] = 1;
                         }
                     },
