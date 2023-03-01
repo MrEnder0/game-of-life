@@ -44,24 +44,25 @@ fn main() {
     while unsafe { RUN } {
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
-                let mut _neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
+                let mut neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
+                neighbours = neighbours.to_string().parse::<u8>().unwrap();
 
                 match main_layer[x][y] {
                     1 => {
-                        if live_rule.contains(_neighbours as u8 as char) {
+                        if live_rule.contains(neighbours.to_string().as_str()) {
                             possible_layer[x][y] = 1;
                         } else {
                             possible_layer[x][y] = 2;
                         }
                     },
                     0 => {
-                        if grow_rule.contains(_neighbours as u8 as char) {
+                        if grow_rule.contains(neighbours.to_string().as_str()) {
                             possible_layer[x][y] = 1;
                         }
                     },
                     _ => do_nothing()
                 }
-                drop(_neighbours);
+                drop(neighbours);
             }
         }
         
