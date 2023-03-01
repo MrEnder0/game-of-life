@@ -12,11 +12,11 @@ fn do_nothing() {
 }
 
 fn main() {
-    let (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed, interleaved_frames) = config_manager::load_config();
+    let stdout = std::io::stdout();
+
+    let (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed, interleaved_frames, live_rule, grow_rule) = config_manager::load_config();
     let filled_tile = &filled_tile.to_string()[..];
     let empty_tile = &empty_tile.to_string()[..];
-
-    let stdout = std::io::stdout();
 
     // use seed if configured to
     let mut rng = if use_seed == true {
@@ -44,28 +44,25 @@ fn main() {
     while unsafe { RUN } {
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
-                let mut _neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
+                let mut neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
+                neighbours = neighbours.to_string().parse::<u8>().unwrap();
 
                 match main_layer[x][y] {
                     1 => {
-                        if _neighbours < 2 {
-                            possible_layer[x][y] = 2;
-                        }
-                        if _neighbours == 2 || _neighbours == 3 {
+                        if live_rule.contains(neighbours.to_string().as_str()) {
                             possible_layer[x][y] = 1;
-                        }
-                        if _neighbours > 3 {
+                        } else {
                             possible_layer[x][y] = 2;
                         }
                     },
                     0 => {
-                        if _neighbours == 3 {
+                        if grow_rule.contains(neighbours.to_string().as_str()) {
                             possible_layer[x][y] = 1;
                         }
                     },
                     _ => do_nothing()
                 }
-                drop(_neighbours);
+                drop(neighbours);
             }
         }
         

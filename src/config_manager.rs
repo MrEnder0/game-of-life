@@ -1,7 +1,7 @@
 use rand::Rng;
 use ini::Ini;
 
-pub(crate) fn load_config() -> (usize, u64, usize, char, char, i32, bool, bool) {
+pub(crate) fn load_config() -> (usize, u64, usize, char, char, i32, bool, bool, String, String) {
     // generate settings file if it doesn't exist
     if !std::path::Path::new("settings.ini").exists() {
         let mut create_settings = Ini::new();
@@ -13,7 +13,8 @@ pub(crate) fn load_config() -> (usize, u64, usize, char, char, i32, bool, bool) 
             .set("empty_tile", "🟥")
             .set("starting_seed", rand::thread_rng().gen_range(-2_147_483_648..2_147_483_647).to_string().as_str())
             .set("use_seed", "false")
-            .set("interleaved_frames", "false");
+            .set("interleaved_frames", "false")
+            .set("rule_string", "23/3");
         create_settings.write_to_file("settings.ini").unwrap();
     }
 
@@ -27,9 +28,13 @@ pub(crate) fn load_config() -> (usize, u64, usize, char, char, i32, bool, bool) 
     let starting_seed = settings.get_from(Some("settings"), "starting_seed").unwrap().parse::<i32>().unwrap();
     let use_seed = settings.get_from(Some("settings"), "use_seed").unwrap().parse::<bool>().unwrap();
     let interleaved_frames = settings.get_from(Some("settings"), "interleaved_frames").unwrap().parse::<bool>().unwrap();
+    let mut rule_string = settings.get_from(Some("settings"), "rule_string").unwrap().split("/");
+
+    let live_rule = rule_string.next().unwrap().to_string();
+    let grow_rule = rule_string.next().unwrap().to_string();
 
     assert!(frame_size > 2, "Frame size must be greater than 2; please change them in settings.ini; Exiting...");
     assert!(empty_tile != filled_tile, "Filled tile and empty tile cannot be the same; please change them in settings.ini; Exiting...");
 
-    return (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed, interleaved_frames);
+    return (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed, interleaved_frames, live_rule, grow_rule);
 }
