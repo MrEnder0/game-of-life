@@ -3,7 +3,7 @@ Note none of these plans are guaranteed and also their may be other changes that
 
 # High priority
 [ ] Config
-    [ ] RuleSet config
+    [x] RuleSet config
     [x] UseSeed config
     [x] Interleaved Frames config
     [ ] Frame Convergence Threshold config
