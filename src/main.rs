@@ -14,11 +14,22 @@ fn do_nothing() {
 fn main() {
     let stdout = std::io::stdout();
 
+    // loads config
     let (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed, interleaved_frames, live_rule, grow_rule) = config_manager::load_config();
     let filled_tile = &filled_tile.to_string()[..];
     let empty_tile = &empty_tile.to_string()[..];
 
-    // use seed if configured to
+    let mut live_rule_lookup = vec![0; 10];
+    let mut grow_rule_lookup = vec![0; 10];
+    for i in 0..10 {
+        if live_rule.contains(i.to_string().as_str()) {
+            live_rule_lookup[i] = 1;
+        }
+        if grow_rule.contains(i.to_string().as_str()) {
+            grow_rule_lookup[i] = 1;
+        }
+    }
+    // Use seed if configured to
     let mut rng = if use_seed == true {
         StdRng::seed_from_u64(starting_seed.try_into().unwrap())
     } else {
@@ -44,19 +55,18 @@ fn main() {
     while unsafe { RUN } {
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
-                let mut neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
-                neighbours = neighbours.to_string().parse::<u8>().unwrap();
+                let neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
 
                 match main_layer[x][y] {
                     1 => {
-                        if live_rule.contains(neighbours.to_string().as_str()) {
+                        if live_rule_lookup[neighbours] == 1 {
                             possible_layer[x][y] = 1;
                         } else {
                             possible_layer[x][y] = 2;
                         }
                     },
                     0 => {
-                        if grow_rule.contains(neighbours.to_string().as_str()) {
+                        if grow_rule_lookup[neighbours as usize] == 1 {
                             possible_layer[x][y] = 1;
                         }
                     },
@@ -95,7 +105,7 @@ fn main() {
             }
             drop(lock);
 
-            thread::sleep(std::time::Duration::from_millis(frame_delay));
+            thread::sleep(std::time::Duration::from_millis(frame_delay.try_into().unwrap()));
         }
         frame_count += 1;
     }

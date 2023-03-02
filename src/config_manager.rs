@@ -1,7 +1,7 @@
 use rand::Rng;
 use ini::Ini;
 
-pub(crate) fn load_config() -> (usize, u64, usize, char, char, i32, bool, bool, String, String) {
+pub(crate) fn load_config() -> (usize, i16, usize, char, char, i32, bool, bool, String, String) {
     // generate settings file if it doesn't exist
     if !std::path::Path::new("settings.ini").exists() {
         let mut create_settings = Ini::new();
@@ -21,7 +21,7 @@ pub(crate) fn load_config() -> (usize, u64, usize, char, char, i32, bool, bool, 
     // loads settings
     let settings = Ini::load_from_file("settings.ini").unwrap();
     let frame_size = settings.get_from(Some("settings"), "frame_size").unwrap().parse::<usize>().unwrap();
-    let frame_delay = settings.get_from(Some("settings"), "frame_delay").unwrap().parse::<u64>().unwrap();
+    let frame_delay = settings.get_from(Some("settings"), "frame_delay").unwrap().parse::<i16>().unwrap();
     let spawn_multiplier = settings.get_from(Some("settings"), "spawn_multiplier").unwrap().parse::<usize>().unwrap();
     let filled_tile = settings.get_from(Some("settings"), "filled_tile").unwrap().parse::<char>().unwrap();
     let empty_tile = settings.get_from(Some("settings"), "empty_tile").unwrap().parse::<char>().unwrap();
