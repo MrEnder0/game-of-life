@@ -129,8 +129,8 @@ fn main() {
         frame_count += 1;
     }
 
-    if frame_delay <= 0 {
-        println!("\rQuit simulation after {frame_count} frames\nTargeted fps was \nInterleaved frames were {interleaved_frames_status}", frame_count = frame_count, interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
+    if frame_delay == 0 {
+        println!("\rQuit simulation after {frame_count} frames\nTargeted fps was ∞\nInterleaved frames were {interleaved_frames_status}", frame_count = frame_count, interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
     } else {
         println!("\rQuit simulation after {frame_count} frames\nTargeted fps was {fps}\nInterleaved frames were {interleaved_frames_status}", frame_count = frame_count, fps = (1000/frame_delay), interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
     }
