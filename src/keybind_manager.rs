@@ -9,7 +9,7 @@ fn do_nothing() {
 }
 
 pub(crate) fn init_keybinds() {
-    loop {
+    while unsafe { RUN } == true {
         let stdout = Term::buffered_stdout();
         if let Ok(character) = stdout.read_char() {
             match character {

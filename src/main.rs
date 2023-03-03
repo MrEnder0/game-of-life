@@ -104,7 +104,7 @@ fn main() {
                 for y in 1..frame_size-1 {
                     write!(lock, "{}", main_layer[x][y].to_string().replace("0", empty_tile).replace("1", filled_tile));
                 }
-                println!("");
+                print!("{}\n", " ".repeat(20));
             }
             drop(lock);
 
@@ -136,6 +136,8 @@ fn main() {
     }
 
     thread::sleep(std::time::Duration::from_millis(1000));
+
+    unsafe { RUN = false; }
     keybind_thread.join().unwrap();
     std::process::exit(0);
 }
