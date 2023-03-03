@@ -6,6 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rand = "0.8.4"
-rust-ini = "0.18"
-console = "0.15.0"
+rand = "0.8.x"
+rust-ini = "0.18.x"
+console = "0.15.x"
