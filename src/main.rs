@@ -100,9 +100,9 @@ fn main() {
             print!("{esc}[1;1H", esc = 27 as char);
             
             let mut lock = stdout.lock();
-            for x in 1..frame_size-1 {
-                for y in 1..frame_size-1 {
-                    write!(lock, "{}", main_layer[x][y].to_string().replace("0", empty_tile).replace("1", filled_tile));
+            for (_x, row) in main_layer.iter_mut().enumerate().skip(1).take(frame_size - 2) {
+                for (_y, cell) in row.iter_mut().enumerate().skip(1).take(frame_size - 2) {
+                    write!(lock, "{}", cell.to_string().replace("0", empty_tile).replace("1", filled_tile));
                 }
                 print!("{}\n", " ".repeat(20));
             }
