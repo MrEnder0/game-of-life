@@ -137,7 +137,6 @@ fn main() {
 
     thread::sleep(std::time::Duration::from_millis(1000));
 
-    unsafe { RUN = false; }
     keybind_thread.join().unwrap();
     std::process::exit(0);
 }
