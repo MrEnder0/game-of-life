@@ -1,20 +1,22 @@
+mod keybind_manager;
 mod config_manager;
-mod exit_manager;
 
 use rand::{Rng, rngs::StdRng, SeedableRng};
 use std::io::Write;
 use std::thread;
 
 static mut RUN: bool = true;
+static mut PAUSE: bool = false;
+static mut DEV: bool = false;
 
 fn do_nothing() {
-    // do nothing... shocker
+    // Does nothing... shocker
 }
 
 fn main() {
     let stdout = std::io::stdout();
 
-    // loads config
+    // Loads config
     let (frame_size, frame_delay, spawn_multiplier, filled_tile, empty_tile, starting_seed, use_seed, interleaved_frames, live_rule, grow_rule) = config_manager::load_config();
     let filled_tile = &filled_tile.to_string()[..];
     let empty_tile = &empty_tile.to_string()[..];
@@ -29,6 +31,7 @@ fn main() {
             grow_rule_lookup[i] = 1;
         }
     }
+
     // Use seed if configured to
     let mut rng = if use_seed == true {
         StdRng::seed_from_u64(starting_seed.try_into().unwrap())
@@ -47,7 +50,7 @@ fn main() {
     }
 
     let keybind_thread = thread::spawn(move || {
-        exit_manager::exit_keybind();
+        keybind_manager::init_keybinds();
     });
 
     print!("{}[2J", 27 as char);
@@ -93,7 +96,7 @@ fn main() {
         }
         
         if interleaved_frames == false || frame_count % 2 == 0 {
-            // clear previous frame
+            // Clears previous frame
             print!("{esc}[1;1H", esc = 27 as char);
             
             let mut lock = stdout.lock();
@@ -105,15 +108,31 @@ fn main() {
             }
             drop(lock);
 
+            // Dev info
+            if unsafe { DEV } == true {
+                if frame_delay <= 0 {
+                    println!("Frame {frame_count} while targeting ∞ fps {frame_size}x{frame_size} with {spawn_multiplier}x spawn multiplier with interleaved frames {interleaved_frames_status}", frame_count = frame_count, frame_size = frame_size, spawn_multiplier = spawn_multiplier, interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
+                } else {
+                    println!("Frame {frame_count} while targeting {fps} fps {frame_size}x{frame_size} with {spawn_multiplier}x spawn multiplier with interleaved frames {interleaved_frames_status}", frame_count = frame_count, frame_size = frame_size, spawn_multiplier = spawn_multiplier, fps = (1000/frame_delay), interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
+                }
+            } else {
+                print!("{}", " ".repeat(110));
+            }
+
             thread::sleep(std::time::Duration::from_millis(frame_delay.try_into().unwrap()));
+
+            // Pauses sim
+            while unsafe { PAUSE } == true {
+                thread::sleep(std::time::Duration::from_millis(10));
+            }
         }
         frame_count += 1;
     }
 
     if frame_delay <= 0 {
-        println!("Quit simulation after {frame_count} frames\nTargeted fps was ∞\nInterleaved frames were {interleaved_frames_status}", frame_count = frame_count, interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
+        println!("\rQuit simulation after {frame_count} frames\nTargeted fps was \nInterleaved frames were {interleaved_frames_status}", frame_count = frame_count, interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
     } else {
-        println!("Quit simulation after {frame_count} frames\nTargeted fps was {fps}\nInterleaved frames were {interleaved_frames_status}", frame_count = frame_count, fps = (1000/frame_delay), interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
+        println!("\rQuit simulation after {frame_count} frames\nTargeted fps was {fps}\nInterleaved frames were {interleaved_frames_status}", frame_count = frame_count, fps = (1000/frame_delay), interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
     }
 
     thread::sleep(std::time::Duration::from_millis(1000));
