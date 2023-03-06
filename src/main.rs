@@ -2,12 +2,12 @@ mod keybind_manager;
 mod config_manager;
 
 use rand::{Rng, rngs::StdRng, SeedableRng};
-use std::io::Write;
+use std::{sync::atomic::{AtomicBool, Ordering}, io::Write};
 use std::thread;
 
-static mut RUN: bool = true;
-static mut PAUSE: bool = false;
-static mut DEV: bool = false;
+static RUN: AtomicBool = AtomicBool::new(true);
+static PAUSE: AtomicBool = AtomicBool::new(false);
+static DEV: AtomicBool = AtomicBool::new(false);
 
 fn do_nothing() {
     // Does nothing... shocker
@@ -55,7 +55,7 @@ fn main() {
 
     print!("{}[2J", 27 as char);
 
-    while unsafe { RUN } {
+    while RUN.load(Ordering::SeqCst) {
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
                 let neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
@@ -109,7 +109,7 @@ fn main() {
             drop(lock);
 
             // Dev info
-            if unsafe { DEV } == true {
+            if DEV.load(Ordering::SeqCst) == true {
                 if frame_delay <= 0 {
                     println!("Frame {frame_count} while targeting ∞ fps {frame_size}x{frame_size} with {spawn_multiplier}x spawn multiplier with interleaved frames {interleaved_frames_status}", frame_count = frame_count, frame_size = frame_size, spawn_multiplier = spawn_multiplier, interleaved_frames_status = interleaved_frames.to_string().replace("true", "on").replace("false", "off"));
                 } else {
@@ -122,7 +122,7 @@ fn main() {
             thread::sleep(std::time::Duration::from_millis(frame_delay.try_into().unwrap()));
 
             // Pauses sim
-            while unsafe { PAUSE } == true {
+            while PAUSE.load(Ordering::SeqCst) == true {
                 thread::sleep(std::time::Duration::from_millis(10));
             }
         }

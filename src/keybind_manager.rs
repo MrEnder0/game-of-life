@@ -2,6 +2,7 @@ use crate::RUN;
 use crate::PAUSE;
 use crate::DEV;
 
+use std::sync::atomic::Ordering;
 use console::Term;
 
 fn do_nothing() {
@@ -9,25 +10,25 @@ fn do_nothing() {
 }
 
 pub(crate) fn init_keybinds() {
-    while unsafe { RUN } == true {
+    while RUN.load(Ordering::SeqCst) {
         let stdout = Term::buffered_stdout();
         if let Ok(character) = stdout.read_char() {
             match character {
                 'q' => {
-                    unsafe { RUN = false; }
+                    RUN.store(false, Ordering::Relaxed);
                 },
                 'p' => {
-                    if unsafe { PAUSE == true } {
-                        unsafe { PAUSE = false; }
+                    if PAUSE.load(Ordering::SeqCst) == true {
+                        PAUSE.store(false, Ordering::Relaxed);
                     } else {
-                        unsafe { PAUSE = true; }
+                        PAUSE.store(true, Ordering::Relaxed);
                     }
                 },
                 'd' => {
-                    if unsafe { DEV == true } {
-                        unsafe { DEV = false; }
+                    if DEV.load(Ordering::SeqCst) == true {
+                        DEV.store(false, Ordering::Relaxed);
                     } else {
-                        unsafe { DEV = true; }
+                        DEV.store(true, Ordering::Relaxed);
                     }
                 },
                 _ => do_nothing()
