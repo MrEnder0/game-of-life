@@ -15,12 +15,13 @@ fn do_nothing() {
 }
 
 fn main() {
-    // Checks for imports
+    // Checks for imports and parses them if they exist
     if cfg!(windows) {
         let import_exist = import_manager::check_imports();
         if import_exist == true {
             import_manager::parse_import();
         }
+        drop(import_exist);
     }
 
     let stdout = std::io::stdout();
