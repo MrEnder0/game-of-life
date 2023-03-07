@@ -2,8 +2,8 @@ mod keybind_manager;
 mod config_manager;
 mod import_manager;
 
-use rand::{Rng, rngs::StdRng, SeedableRng};
 use std::{sync::atomic::{AtomicBool, Ordering}, io::Write};
+use rand::{Rng, rngs::StdRng, SeedableRng};
 use std::thread;
 
 static RUN: AtomicBool = AtomicBool::new(true);

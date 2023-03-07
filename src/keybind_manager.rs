@@ -1,9 +1,9 @@
+use std::sync::atomic::Ordering;
+use console::Term;
+
 use crate::RUN;
 use crate::PAUSE;
 use crate::DEV;
-
-use std::sync::atomic::Ordering;
-use console::Term;
 
 fn do_nothing() {
     // Does nothing... shocker
