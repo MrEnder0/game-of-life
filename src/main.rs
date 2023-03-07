@@ -1,5 +1,6 @@
 mod keybind_manager;
 mod config_manager;
+mod import_manager;
 
 use rand::{Rng, rngs::StdRng, SeedableRng};
 use std::{sync::atomic::{AtomicBool, Ordering}, io::Write};
@@ -14,6 +15,14 @@ fn do_nothing() {
 }
 
 fn main() {
+    // Checks for imports
+    if cfg!(windows) {
+        let import_exist = import_manager::check_imports();
+        if import_exist == true {
+            import_manager::parse_import();
+        }
+    }
+
     let stdout = std::io::stdout();
 
     // Loads config
@@ -58,24 +67,24 @@ fn main() {
     while RUN.load(Ordering::SeqCst) {
         for x in 1..frame_size-1 {
             for y in 1..frame_size-1 {
-                let neighbours = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
+                let neighbors = main_layer[x-1][y-1] + main_layer[x-1][y] + main_layer[x-1][y+1] + main_layer[x][y-1] + main_layer[x][y+1] + main_layer[x+1][y-1] + main_layer[x+1][y] + main_layer[x+1][y+1];
 
                 match main_layer[x][y] {
                     1 => {
-                        if live_rule_lookup[neighbours] == 1 {
+                        if live_rule_lookup[neighbors] == 1 {
                             possible_layer[x][y] = 1;
                         } else {
                             possible_layer[x][y] = 2;
                         }
                     },
                     0 => {
-                        if grow_rule_lookup[neighbours as usize] == 1 {
+                        if grow_rule_lookup[neighbors as usize] == 1 {
                             possible_layer[x][y] = 1;
                         }
                     },
                     _ => do_nothing()
                 }
-                drop(neighbours);
+                drop(neighbors);
             }
         }
         
