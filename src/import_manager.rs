@@ -32,10 +32,12 @@ pub(crate) fn parse_import() {
                     }
                 }
                 "elfv2" => {
-                    let frame = iter.next().unwrap().split('\\').collect::<Vec<_>>();
-                    for row in frame {
-                        println!("{}", row.replace("0", ".").replace("1", "*"));
-                    }  
+                    let mut itter_clone = iter.clone();
+                    itter_clone.next();
+                    let frame: Vec<String> = itter_clone.map(|s| s.to_string()).collect();
+                    for row in &frame {
+                        println!("{}", row.replace(".", "0").replace("#", "1"));
+                    }
                 }
                 _ => println!("Loaded unknown life format found only supports 'elfv1', and 'elfv2'..."),
             }
