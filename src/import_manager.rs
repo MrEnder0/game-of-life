@@ -25,13 +25,13 @@ pub(crate) fn parse_import() {
     while let Some(line) = iter.next() {
         if line.starts_with('%') && &line[1..4] == "VER" {
             match &line[5..] {
-                "elfv1" => {
+                "ELFv1" => {
                     let frame = iter.next().unwrap().split('|').collect::<Vec<_>>();
                     for row in frame {
                         println!("{}", row);
                     }
                 }
-                "elfv2" => {
+                "ELFv2" => {
                     let mut itter_clone = iter.clone();
                     itter_clone.next();
                     let frame: Vec<String> = itter_clone.map(|s| s.to_string()).collect();
@@ -39,7 +39,7 @@ pub(crate) fn parse_import() {
                         println!("{}", row.replace(".", "0").replace("#", "1"));
                     }
                 }
-                _ => println!("Loaded unknown life format found only supports 'elfv1', and 'elfv2'..."),
+                _ => println!("Loaded unknown life format found only supports 'ELFv1', and 'ELFv2'..."),
             }
         }
     }
