@@ -24,20 +24,20 @@ pub(crate) fn parse_import() {
     let mut iter = lines.into_iter();
     while let Some(line) = iter.next() {
         if line.starts_with('%') && &line[1..4] == "VER" {
-            match line[5..].parse::<i16>().unwrap() {
-                1 => {
+            match &line[5..] {
+                "elfv1" => {
                     let frame = iter.next().unwrap().split('|').collect::<Vec<_>>();
                     for row in frame {
                         println!("{}", row);
                     }
                 }
-                2 => {
+                "elfv2" => {
                     let frame = iter.next().unwrap().split('\\').collect::<Vec<_>>();
                     for row in frame {
                         println!("{}", row.replace("0", ".").replace("1", "*"));
                     }  
                 }
-                _ => println!("Loaded unknown life version ignoring..."),
+                _ => println!("Loaded unknown life format found only supports 'elfv1', and 'elfv2'..."),
             }
         }
     }
