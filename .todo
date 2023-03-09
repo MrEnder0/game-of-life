@@ -9,3 +9,11 @@ Note none of these plans are guaranteed and also their may be other changes that
     [ ] Frame Convergence Threshold config
     
 [ ] Make the imports functional and not just display
+
+[ ] Support more life formates
+    [x] Life v1.05
+    [x] Life v1.06
+    [x] Elfv1
+    [x] Elfv2
+    [ ] RLE
+    [ ] Plaintext
