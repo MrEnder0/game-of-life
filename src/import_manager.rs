@@ -51,11 +51,9 @@ pub(crate) fn parse_import() {
                     let mut itter_clone = iter.clone();
                     let mut width = 0;
                     let mut height = 0;
-                    
-                    // skip the first line of the input
                     itter_clone.next();
                     
-                    // read in the coordinates and update the width and height
+                    // Reads the coordinates and update the width and height
                     for line in itter_clone {
                         let coords: Vec<i32> = line
                             .split_whitespace()
@@ -72,7 +70,7 @@ pub(crate) fn parse_import() {
                         }
                     }
                     
-                    // create the grid and set the cells based on the coordinates
+                    // Creates the grid and set the cells based on the coordinates
                     let mut grid = vec![vec![0; (width * 2 + 1) as usize]; (height * 2 + 1) as usize];
                     let iter_clone = iter.clone();
                     for line in iter_clone {
@@ -85,7 +83,7 @@ pub(crate) fn parse_import() {
                         grid[(y + height) as usize][(x + width) as usize] = 1;
                     }
                     
-                    // print out the grid
+                    // Prints out the grid
                     for row in &grid {
                         for cell in row {
                             print!("{}", cell);
